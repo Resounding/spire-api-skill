@@ -3,24 +3,30 @@
 ## Setup (Common to All Examples)
 
 ```csharp
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+// IMPORTANT: Disable auto-redirect because Spire may redirect requests,
+// and .NET's HttpClient strips the Authorization header on redirect.
 var handler = new HttpClientHandler
 {
     ServerCertificateCustomValidationCallback =
-        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+    AllowAutoRedirect = false
 };
+
+var auth = new AuthenticationHeaderValue(
+    "Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes("username:password")));
 
 var client = new HttpClient(handler)
 {
     BaseAddress = new Uri("https://your-server:10880/api/v2/companies/yourcompany/")
 };
-client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-    "Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes("username:password")));
+client.DefaultRequestHeaders.Authorization = auth;
 
 var json = new JsonSerializerOptions
 {
@@ -28,6 +34,30 @@ var json = new JsonSerializerOptions
     PropertyNameCaseInsensitive = true,
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
 };
+
+// Helper: follow redirects while preserving the Authorization header
+async Task<HttpResponseMessage> SendWithAuthAsync(HttpClient client, string url,
+    AuthenticationHeaderValue auth)
+{
+    var response = await client.GetAsync(url);
+    int remaining = 5;
+    while (remaining-- > 0 && IsRedirect(response.StatusCode)
+        && response.Headers.Location is not null)
+    {
+        var redirectUri = response.Headers.Location;
+        response.Dispose();
+        var request = new HttpRequestMessage(HttpMethod.Get, redirectUri);
+        request.Headers.Authorization = auth;
+        response = await client.SendAsync(request);
+    }
+    return response;
+}
+
+bool IsRedirect(HttpStatusCode code) =>
+    code is HttpStatusCode.MovedPermanently
+        or HttpStatusCode.Found
+        or HttpStatusCode.TemporaryRedirect
+        or HttpStatusCode.PermanentRedirect;
 ```
 
 ## Response Model
@@ -126,7 +156,7 @@ response.EnsureSuccessStatusCode();
 
 ```csharp
 var result = await client.GetFromJsonAsync<SpireListResponse<JsonElement>>(
-    "inventory-items?filter=%7B%22status%22%3A%22A%22%7D&udf=1&start=0&limit=100&sort=partNo",
+    "inventory/items?filter=%7B%22status%22%3A%22A%22%7D&udf=1&start=0&limit=100&sort=partNo",
     json);
 
 foreach (var item in result.Records)
@@ -161,7 +191,7 @@ var newItem = new
     udf = new { country_of_origin = "Canada" }
 };
 
-var response = await client.PostAsJsonAsync("inventory-items", newItem, json);
+var response = await client.PostAsJsonAsync("inventory/items", newItem, json);
 response.EnsureSuccessStatusCode();
 ```
 
@@ -181,13 +211,13 @@ var adjustment = new
     }
 };
 
-var createResp = await client.PostAsJsonAsync("inventory-adjustments", adjustment, json);
+var createResp = await client.PostAsJsonAsync("inventory/adjustments", adjustment, json);
 createResp.EnsureSuccessStatusCode();
 var created = await createResp.Content.ReadFromJsonAsync<JsonElement>(json);
 var adjId = created.GetProperty("id").GetInt32();
 
 // Step 2: Post it to update inventory quantities
-var postResp = await client.PostAsJsonAsync($"inventory-adjustments/{adjId}/post",
+var postResp = await client.PostAsJsonAsync($"inventory/adjustments/{adjId}/post",
     new { }, json);
 postResp.EnsureSuccessStatusCode();
 ```
@@ -207,13 +237,13 @@ var transfer = new
     }
 };
 
-var createResp = await client.PostAsJsonAsync("inventory-transfers", transfer, json);
+var createResp = await client.PostAsJsonAsync("inventory/transfers", transfer, json);
 createResp.EnsureSuccessStatusCode();
 var created = await createResp.Content.ReadFromJsonAsync<JsonElement>(json);
 var transferId = created.GetProperty("id").GetInt32();
 
 // Post the transfer
-await client.PostAsJsonAsync($"inventory-transfers/{transferId}/post", new { }, json);
+await client.PostAsJsonAsync($"inventory/transfers/{transferId}/post", new { }, json);
 ```
 
 ---
@@ -247,7 +277,7 @@ var order = new
     }
 };
 
-var response = await client.PostAsJsonAsync("sales-orders", order, json);
+var response = await client.PostAsJsonAsync("sales/orders", order, json);
 response.EnsureSuccessStatusCode();
 var created = await response.Content.ReadFromJsonAsync<JsonElement>(json);
 Console.WriteLine($"Order ID: {created.GetProperty("id")}, Order #: {created.GetProperty("orderNo")}");
@@ -263,13 +293,13 @@ var filter = Uri.EscapeDataString(JsonSerializer.Serialize(new
 }));
 
 var result = await client.GetFromJsonAsync<SpireListResponse<JsonElement>>(
-    $"sales-orders?filter={filter}&sort=-orderDate&fields=id,orderNo,orderDate,total", json);
+    $"sales/orders?filter={filter}&sort=-orderDate&fields=id,orderNo,orderDate,total", json);
 ```
 
 ### Convert a Sales Order to Invoice
 
 ```csharp
-var response = await client.PostAsJsonAsync("sales-orders/12345/invoice",
+var response = await client.PostAsJsonAsync("sales/orders/12345/invoice",
     new { invoiceDate = DateTime.Today.ToString("yyyy-MM-dd") }, json);
 response.EnsureSuccessStatusCode();
 ```
@@ -299,7 +329,7 @@ var po = new
     }
 };
 
-var response = await client.PostAsJsonAsync("purchasing-orders", po, json);
+var response = await client.PostAsJsonAsync("purchasing/orders", po, json);
 response.EnsureSuccessStatusCode();
 var created = await response.Content.ReadFromJsonAsync<JsonElement>(json);
 var poId = created.GetProperty("id").GetInt32();
@@ -309,7 +339,7 @@ var poId = created.GetProperty("id").GetInt32();
 
 ```csharp
 // Issue (send to vendor)
-await client.PostAsJsonAsync($"purchasing-orders/{poId}/issue", new { }, json);
+await client.PostAsJsonAsync($"purchasing/orders/{poId}/issue", new { }, json);
 
 // Receive items (partial or full)
 var receivePayload = new
@@ -319,7 +349,7 @@ var receivePayload = new
         new { id = 1001, receiveQty = "100" }
     }
 };
-await client.PostAsJsonAsync($"purchasing-orders/{poId}/receive", receivePayload, json);
+await client.PostAsJsonAsync($"purchasing/orders/{poId}/receive", receivePayload, json);
 ```
 
 ---
@@ -389,7 +419,7 @@ var journalEntry = new
     }
 };
 
-var response = await client.PostAsJsonAsync("gl-transactions", journalEntry, json);
+var response = await client.PostAsJsonAsync("gl/transactions", journalEntry, json);
 response.EnsureSuccessStatusCode();
 ```
 
@@ -408,7 +438,7 @@ var prodOrder = new
     requiredDate = "2024-01-22"
 };
 
-var response = await client.PostAsJsonAsync("production-orders", prodOrder, json);
+var response = await client.PostAsJsonAsync("production/orders", prodOrder, json);
 response.EnsureSuccessStatusCode();
 ```
 
@@ -428,7 +458,7 @@ var prodOrder = new
     }
 };
 
-var response = await client.PostAsJsonAsync("production-orders", prodOrder, json);
+var response = await client.PostAsJsonAsync("production/orders", prodOrder, json);
 response.EnsureSuccessStatusCode();
 ```
 
@@ -460,7 +490,7 @@ var employee = new
     }
 };
 
-var response = await client.PostAsJsonAsync("payroll-employees", employee, json);
+var response = await client.PostAsJsonAsync("payroll/employees", employee, json);
 response.EnsureSuccessStatusCode();
 ```
 
@@ -522,7 +552,26 @@ var allActiveCustomers = await GetAllRecordsAsync(
 
 ## Typed Model Example
 
-For strongly-typed access, define C# record/class models:
+For strongly-typed access, define C# record/class models.
+
+**Important:** The Spire API returns many numeric fields as JSON strings (e.g. `"29.9900"` instead of `29.99`). Use a custom `JsonConverter` for `decimal` properties:
+
+```csharp
+public class StringDecimalConverter : JsonConverter<decimal>
+{
+    public override decimal Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options) =>
+        reader.TokenType == JsonTokenType.String
+            ? decimal.Parse(reader.GetString()!)
+            : reader.GetDecimal();
+
+    public override void Write(Utf8JsonWriter writer, decimal value,
+        JsonSerializerOptions options) =>
+        writer.WriteNumberValue(value);
+}
+```
+
+Then apply it to your models:
 
 ```csharp
 public record Customer
@@ -533,7 +582,10 @@ public record Customer
     public string Status { get; init; } = "";
     public Address? Address { get; init; }
     public Contact? Contact { get; init; }
+
+    [JsonConverter(typeof(StringDecimalConverter))]
     public decimal CreditLimit { get; init; }
+
     public string? TermsCode { get; init; }
     public Dictionary<string, JsonElement>? Udf { get; init; }
 }

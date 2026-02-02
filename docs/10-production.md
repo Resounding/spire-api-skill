@@ -16,7 +16,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/production-categories` | Get list of production categories |
+| GET | `/production/categories` | Get list of production categories |
 
 ---
 
@@ -24,15 +24,15 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/production-orders` | Get list of production orders |
-| POST | `/production-orders` | Create a production order |
-| GET | `/production-orders/{id}` | Get production order by ID |
-| PUT | `/production-orders/{id}` | Update production order by ID |
-| DELETE | `/production-orders/{id}` | Delete production order by ID |
+| GET | `/production/orders` | Get list of production orders |
+| POST | `/production/orders` | Create a production order |
+| GET | `/production/orders/{id}` | Get production order by ID |
+| PUT | `/production/orders/{id}` | Update production order by ID |
+| DELETE | `/production/orders/{id}` | Delete production order by ID |
 
 ---
 
-## POST /production-orders - Create Production Order
+## POST /production/orders - Create Production Order
 
 ### Request Body
 
@@ -109,7 +109,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 ---
 
-## PUT /production-orders/{id} - Update Production Order
+## PUT /production/orders/{id} - Update Production Order
 
 ```json
 {
@@ -125,7 +125,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/production-orders/{id}/notes` | Get list of production order notes |
+| GET | `/production/orders/{id}/notes` | Get list of production order notes |
 
 ---
 
@@ -133,16 +133,16 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/production-orders/udf` | Get list of production order UDFs |
-| GET | `/production-orders/udf-fields` | Get list of UDF fields |
-| GET | `/production-orders/udf-fields/{field-name}` | Get UDF field by name |
-| PUT | `/production-orders/udf-fields/{field-name}` | Update UDF field by name |
-| DELETE | `/production-orders/udf-fields/{field-name}` | Delete UDF field by name |
-| GET | `/production-orders/udf-pages` | Get list of UDF pages |
-| POST | `/production-orders/udf-pages` | Create UDF page |
-| GET | `/production-orders/udf-pages/{id}` | Get UDF page by ID |
-| PUT | `/production-orders/udf-pages/{id}` | Update UDF page by ID |
-| DELETE | `/production-orders/udf-pages/{id}` | Delete UDF page by ID |
+| GET | `/production/orders/udf` | Get list of production order UDFs |
+| GET | `/production/orders/udf-fields` | Get list of UDF fields |
+| GET | `/production/orders/udf-fields/{field-name}` | Get UDF field by name |
+| PUT | `/production/orders/udf-fields/{field-name}` | Update UDF field by name |
+| DELETE | `/production/orders/udf-fields/{field-name}` | Delete UDF field by name |
+| GET | `/production/orders/udf-pages` | Get list of UDF pages |
+| POST | `/production/orders/udf-pages` | Create UDF page |
+| GET | `/production/orders/udf-pages/{id}` | Get UDF page by ID |
+| PUT | `/production/orders/udf-pages/{id}` | Update UDF page by ID |
+| DELETE | `/production/orders/udf-pages/{id}` | Delete UDF page by ID |
 
 ---
 
@@ -150,15 +150,15 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/production-templates` | Get list of production templates |
-| POST | `/production-templates` | Create a production template |
-| GET | `/production-templates/{id}` | Get production template by ID |
-| PUT | `/production-templates/{id}` | Update production template by ID |
-| DELETE | `/production-templates/{id}` | Delete production template by ID |
+| GET | `/production/templates` | Get list of production templates |
+| POST | `/production/templates` | Create a production template |
+| GET | `/production/templates/{id}` | Get production template by ID |
+| PUT | `/production/templates/{id}` | Update production template by ID |
+| DELETE | `/production/templates/{id}` | Delete production template by ID |
 
 ---
 
-## POST /production-templates - Create Production Template
+## POST /production/templates - Create Production Template
 
 ### Request Body
 
@@ -209,7 +209,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/production-templates/{id}/notes` | Get list of production template notes |
+| GET | `/production/templates/{id}/notes` | Get list of production template notes |
 
 ---
 
@@ -217,7 +217,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/production-template-items` | Get list of production template items |
+| GET | `/production/template-items` | Get list of production template items |
 
 ---
 
@@ -233,7 +233,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/production-history` | Get list of production history |
+| GET | `/production/history` | Get list of production history |
 
 ---
 
@@ -241,7 +241,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/production-history-items` | Get list of production history items |
+| GET | `/production/history-items` | Get list of production history items |
 
 ---
 
@@ -252,25 +252,25 @@ Base Path: `/api/v2/companies/{company-name}`
 GET /production
 
 # Get all production orders
-GET /production-orders
+GET /production/orders
 
 # Get production order by ID
-GET /production-orders/123
+GET /production/orders/123
 
 # Filter orders by status (Open)
-GET /production-orders?filter={"status":"O"}
+GET /production/orders?filter={"status":"O"}
 
 # Filter by date range
-GET /production-orders?filter={"date":{"$gte":"2024-01-01","$lte":"2024-01-31"}}
+GET /production/orders?filter={"date":{"$gte":"2024-01-01","$lte":"2024-01-31"}}
 
 # Sort by required date
-GET /production-orders?sort=requiredDate
+GET /production/orders?sort=requiredDate
 
 # Include UDF fields
-GET /production-orders?udf=1
+GET /production/orders?udf=1
 
 # Create a production order from template
-POST /production-orders
+POST /production/orders
 Content-Type: application/json
 {
   "template": {"id": 1},
@@ -279,7 +279,7 @@ Content-Type: application/json
 }
 
 # Create a production order with custom items
-POST /production-orders
+POST /production/orders
 Content-Type: application/json
 {
   "finishedGood": {"partNo": "ASSEMBLED-WIDGET"},
@@ -291,18 +291,18 @@ Content-Type: application/json
 }
 
 # Update production order status
-PUT /production-orders/123
+PUT /production/orders/123
 Content-Type: application/json
 {
   "status": "I"
 }
 
 # Get production templates
-GET /production-templates
+GET /production/templates
 
 # Get production history
-GET /production-history
+GET /production/history
 
 # Get production template items
-GET /production-template-items
+GET /production/template-items
 ```

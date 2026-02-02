@@ -16,19 +16,19 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/gl-accounts` | Get list of GL accounts |
+| GET | `/gl/accounts` | Get list of GL accounts |
 
 ### GL Accounts UDFs
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/gl-accounts-udf` | Get list of GL account UDFs |
-| GET | `/gl-accounts-udf-fields` | Get list of UDF fields |
-| GET | `/gl-accounts-udf-fields/{field-name}` | Get UDF field by name |
-| PUT | `/gl-accounts-udf-fields/{field-name}` | Update UDF field by name |
-| DELETE | `/gl-accounts-udf-fields/{field-name}` | Delete UDF field by name |
-| GET | `/gl-accounts-udf-pages` | Get list of UDF pages |
-| POST | `/gl-accounts-udf-pages` | Create UDF page |
+| GET | `/gl/accounts-udf` | Get list of GL account UDFs |
+| GET | `/gl/accounts-udf-fields` | Get list of UDF fields |
+| GET | `/gl/accounts-udf-fields/{field-name}` | Get UDF field by name |
+| PUT | `/gl/accounts-udf-fields/{field-name}` | Update UDF field by name |
+| DELETE | `/gl/accounts-udf-fields/{field-name}` | Delete UDF field by name |
+| GET | `/gl/accounts-udf-pages` | Get list of UDF pages |
+| POST | `/gl/accounts-udf-pages` | Create UDF page |
 
 ---
 
@@ -69,7 +69,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/gl-special-accounts` | Get list of special GL accounts |
+| GET | `/gl/special-accounts` | Get list of special GL accounts |
 
 ---
 
@@ -78,7 +78,7 @@ Base Path: `/api/v2/companies/{company-name}`
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/gl-history` | Get GL history root |
-| GET | `/gl-history-transactions` | Get list of historical GL transactions |
+| GET | `/gl/history-transactions` | Get list of historical GL transactions |
 
 ---
 
@@ -86,13 +86,13 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/gl-transactions` | Get list of GL transactions |
-| POST | `/gl-transactions` | Create a GL transaction |
-| GET | `/gl-transactions/{id}` | Get GL transaction by ID |
+| GET | `/gl/transactions` | Get list of GL transactions |
+| POST | `/gl/transactions` | Create a GL transaction |
+| GET | `/gl/transactions/{id}` | Get GL transaction by ID |
 
 ---
 
-## POST /gl-transactions - Create GL Transaction (Journal Entry)
+## POST /gl/transactions - Create GL Transaction (Journal Entry)
 
 ### Request Body
 
@@ -168,7 +168,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/gl-year-end` | Execute year-end closing procedures |
+| POST | `/gl/year-end` | Execute year-end closing procedures |
 
 ---
 
@@ -179,13 +179,13 @@ Base Path: `/api/v2/companies/{company-name}`
 GET /gl
 
 # Get all GL accounts
-GET /gl-accounts
+GET /gl/accounts
 
 # Get GL transactions
-GET /gl-transactions
+GET /gl/transactions
 
 # Create a GL transaction (journal entry)
-POST /gl-transactions
+POST /gl/transactions
 Content-Type: application/json
 {
   "date": "2024-01-15",
@@ -199,11 +199,11 @@ Content-Type: application/json
 GET /gl-periods
 
 # Get GL history transactions
-GET /gl-history-transactions
+GET /gl/history-transactions
 
 # Filter accounts by type
-GET /gl-accounts?filter={"type":"A"}
+GET /gl/accounts?filter={"type":"A"}
 
 # Perform year-end closing
-POST /gl-year-end
+POST /gl/year-end
 ```

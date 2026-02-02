@@ -22,16 +22,16 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/ar-aged-udf` | Get list of AR aged UDFs |
-| GET | `/ar-aged-udf-fields` | Get list of UDF fields |
-| GET | `/ar-aged-udf-fields/{field-name}` | Get UDF field by name |
-| PUT | `/ar-aged-udf-fields/{field-name}` | Update UDF field by name |
-| DELETE | `/ar-aged-udf-fields/{field-name}` | Delete UDF field by name |
-| GET | `/ar-aged-udf-pages` | Get list of UDF pages |
-| POST | `/ar-aged-udf-pages` | Create UDF page |
-| GET | `/ar-aged-udf-pages/{id}` | Get UDF page by ID |
-| PUT | `/ar-aged-udf-pages/{id}` | Update UDF page by ID |
-| DELETE | `/ar-aged-udf-pages/{id}` | Delete UDF page by ID |
+| GET | `/ar/aged-udf` | Get list of AR aged UDFs |
+| GET | `/ar/aged-udf-fields` | Get list of UDF fields |
+| GET | `/ar/aged-udf-fields/{field-name}` | Get UDF field by name |
+| PUT | `/ar/aged-udf-fields/{field-name}` | Update UDF field by name |
+| DELETE | `/ar/aged-udf-fields/{field-name}` | Delete UDF field by name |
+| GET | `/ar/aged-udf-pages` | Get list of UDF pages |
+| POST | `/ar/aged-udf-pages` | Create UDF page |
+| GET | `/ar/aged-udf-pages/{id}` | Get UDF page by ID |
+| PUT | `/ar/aged-udf-pages/{id}` | Update UDF page by ID |
+| DELETE | `/ar/aged-udf-pages/{id}` | Delete UDF page by ID |
 
 ---
 

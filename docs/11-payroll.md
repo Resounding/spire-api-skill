@@ -16,7 +16,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/payroll-departments` | Get list of payroll departments |
+| GET | `/payroll/departments` | Get list of payroll departments |
 
 ---
 
@@ -24,15 +24,15 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/payroll-employees` | Get list of payroll employees |
-| POST | `/payroll-employees` | Create a payroll employee |
-| GET | `/payroll-employees/{id}` | Get payroll employee by ID |
-| PUT | `/payroll-employees/{id}` | Update payroll employee by ID |
-| DELETE | `/payroll-employees/{id}` | Delete payroll employee by ID |
+| GET | `/payroll/employees` | Get list of payroll employees |
+| POST | `/payroll/employees` | Create a payroll employee |
+| GET | `/payroll/employees/{id}` | Get payroll employee by ID |
+| PUT | `/payroll/employees/{id}` | Update payroll employee by ID |
+| DELETE | `/payroll/employees/{id}` | Delete payroll employee by ID |
 
 ---
 
-## POST /payroll-employees - Create Employee
+## POST /payroll/employees - Create Employee
 
 ### Request Body
 
@@ -98,7 +98,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 ---
 
-## PUT /payroll-employees/{id} - Update Employee
+## PUT /payroll/employees/{id} - Update Employee
 
 ```json
 {
@@ -113,7 +113,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/payroll-employees/{id}/communications` | Get list of employee communications |
+| GET | `/payroll/employees/{id}/communications` | Get list of employee communications |
 
 ---
 
@@ -121,7 +121,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/payroll-employees/{id}/contacts` | Get list of employee contacts |
+| GET | `/payroll/employees/{id}/contacts` | Get list of employee contacts |
 
 ---
 
@@ -129,8 +129,8 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/payroll-employees/{id}/email-messages` | Get list of employee email messages |
-| POST | `/payroll-employees/{id}/email-messages` | Create employee email message |
+| GET | `/payroll/employees/{id}/email-messages` | Get list of employee email messages |
+| POST | `/payroll/employees/{id}/email-messages` | Create employee email message |
 
 ---
 
@@ -138,8 +138,8 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/payroll-employees/{id}/notes` | Get list of employee notes |
-| POST | `/payroll-employees/{id}/notes` | Create employee note |
+| GET | `/payroll/employees/{id}/notes` | Get list of employee notes |
+| POST | `/payroll/employees/{id}/notes` | Create employee note |
 
 ---
 
@@ -147,16 +147,16 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/payroll-employees-udf` | Get list of employee UDFs |
-| GET | `/payroll-employees-udf-fields` | Get list of UDF fields |
-| GET | `/payroll-employees-udf-fields/{field-name}` | Get UDF field by name |
-| PUT | `/payroll-employees-udf-fields/{field-name}` | Update UDF field by name |
-| DELETE | `/payroll-employees-udf-fields/{field-name}` | Delete UDF field by name |
-| GET | `/payroll-employees-udf-pages` | Get list of UDF pages |
-| POST | `/payroll-employees-udf-pages` | Create UDF page |
-| GET | `/payroll-employees-udf-pages/{id}` | Get UDF page by ID |
-| PUT | `/payroll-employees-udf-pages/{id}` | Update UDF page by ID |
-| DELETE | `/payroll-employees-udf-pages/{id}` | Delete UDF page by ID |
+| GET | `/payroll/employees-udf` | Get list of employee UDFs |
+| GET | `/payroll/employees-udf-fields` | Get list of UDF fields |
+| GET | `/payroll/employees-udf-fields/{field-name}` | Get UDF field by name |
+| PUT | `/payroll/employees-udf-fields/{field-name}` | Update UDF field by name |
+| DELETE | `/payroll/employees-udf-fields/{field-name}` | Delete UDF field by name |
+| GET | `/payroll/employees-udf-pages` | Get list of UDF pages |
+| POST | `/payroll/employees-udf-pages` | Create UDF page |
+| GET | `/payroll/employees-udf-pages/{id}` | Get UDF page by ID |
+| PUT | `/payroll/employees-udf-pages/{id}` | Update UDF page by ID |
+| DELETE | `/payroll/employees-udf-pages/{id}` | Delete UDF page by ID |
 
 ---
 
@@ -164,7 +164,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/payroll-schedules` | Get list of payroll schedules |
+| GET | `/payroll/schedules` | Get list of payroll schedules |
 
 ---
 
@@ -172,7 +172,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/payroll-employee-roes` | Get list of employee ROEs |
+| GET | `/payroll/employee-roes` | Get list of employee ROEs |
 
 ---
 
@@ -188,12 +188,12 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/payroll-timecards` | Get list of payroll timecards |
-| POST | `/payroll-timecards` | Create a payroll timecard |
-| GET | `/payroll-timecards/{id}` | Get payroll timecard by ID |
-| PUT | `/payroll-timecards/{id}` | Update payroll timecard by ID |
-| DELETE | `/payroll-timecards/{id}` | Delete payroll timecard by ID |
-| POST | `/payroll-timecards/{id}/post` | Post payroll timecard |
+| GET | `/payroll/timecards` | Get list of payroll timecards |
+| POST | `/payroll/timecards` | Create a payroll timecard |
+| GET | `/payroll/timecards/{id}` | Get payroll timecard by ID |
+| PUT | `/payroll/timecards/{id}` | Update payroll timecard by ID |
+| DELETE | `/payroll/timecards/{id}` | Delete payroll timecard by ID |
+| POST | `/payroll/timecards/{id}/post` | Post payroll timecard |
 
 ---
 
@@ -201,8 +201,8 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/payroll-timecards/{id}/email-messages` | Get list of timecard email messages |
-| POST | `/payroll-timecards/{id}/email-messages` | Create timecard email message |
+| GET | `/payroll/timecards/{id}/email-messages` | Get list of timecard email messages |
+| POST | `/payroll/timecards/{id}/email-messages` | Create timecard email message |
 
 ---
 
@@ -210,16 +210,16 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/payroll-timecards-udf` | Get list of timecard UDFs |
-| GET | `/payroll-timecards-udf-fields` | Get list of UDF fields |
-| GET | `/payroll-timecards-udf-fields/{field-name}` | Get UDF field by name |
-| PUT | `/payroll-timecards-udf-fields/{field-name}` | Update UDF field by name |
-| DELETE | `/payroll-timecards-udf-fields/{field-name}` | Delete UDF field by name |
-| GET | `/payroll-timecards-udf-pages` | Get list of UDF pages |
-| POST | `/payroll-timecards-udf-pages` | Create UDF page |
-| GET | `/payroll-timecards-udf-pages/{id}` | Get UDF page by ID |
-| PUT | `/payroll-timecards-udf-pages/{id}` | Update UDF page by ID |
-| DELETE | `/payroll-timecards-udf-pages/{id}` | Delete UDF page by ID |
+| GET | `/payroll/timecards-udf` | Get list of timecard UDFs |
+| GET | `/payroll/timecards-udf-fields` | Get list of UDF fields |
+| GET | `/payroll/timecards-udf-fields/{field-name}` | Get UDF field by name |
+| PUT | `/payroll/timecards-udf-fields/{field-name}` | Update UDF field by name |
+| DELETE | `/payroll/timecards-udf-fields/{field-name}` | Delete UDF field by name |
+| GET | `/payroll/timecards-udf-pages` | Get list of UDF pages |
+| POST | `/payroll/timecards-udf-pages` | Create UDF page |
+| GET | `/payroll/timecards-udf-pages/{id}` | Get UDF page by ID |
+| PUT | `/payroll/timecards-udf-pages/{id}` | Update UDF page by ID |
+| DELETE | `/payroll/timecards-udf-pages/{id}` | Delete UDF page by ID |
 
 ---
 
@@ -239,7 +239,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/payroll-timecard-batches` | Get list of timecard batches |
+| GET | `/payroll/timecard-batches` | Get list of timecard batches |
 
 ---
 
@@ -247,7 +247,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/payroll-year-end` | Perform payroll year end |
+| POST | `/payroll/year-end` | Perform payroll year end |
 
 ---
 
@@ -258,10 +258,10 @@ Base Path: `/api/v2/companies/{company-name}`
 GET /payroll
 
 # Get all employees
-GET /payroll-employees
+GET /payroll/employees
 
 # Create an employee
-POST /payroll-employees
+POST /payroll/employees
 Content-Type: application/json
 {
   "firstName": "John",
@@ -271,14 +271,14 @@ Content-Type: application/json
 }
 
 # Get timecards
-GET /payroll-timecards
+GET /payroll/timecards
 
 # Post a timecard
-POST /payroll-timecards/12345/post
+POST /payroll/timecards/12345/post
 
 # Get employee T4s
 GET /payroll-employee-t4s
 
 # Filter employees by department
-GET /payroll-employees?filter={"department.id":1}
+GET /payroll/employees?filter={"department.id":1}
 ```

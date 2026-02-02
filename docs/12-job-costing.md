@@ -16,11 +16,11 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/job-costing-accounts` | Get list of job costing accounts |
-| POST | `/job-costing-accounts` | Create a job costing account |
-| GET | `/job-costing-accounts/{id}` | Get job costing account by ID |
-| PUT | `/job-costing-accounts/{id}` | Update job costing account by ID |
-| DELETE | `/job-costing-accounts/{id}` | Delete job costing account by ID |
+| GET | `/job-costing/accounts` | Get list of job costing accounts |
+| POST | `/job-costing/accounts` | Create a job costing account |
+| GET | `/job-costing/accounts/{id}` | Get job costing account by ID |
+| PUT | `/job-costing/accounts/{id}` | Update job costing account by ID |
+| DELETE | `/job-costing/accounts/{id}` | Delete job costing account by ID |
 
 ---
 
@@ -28,9 +28,9 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/job-costing-entries` | Get list of job costing entries |
-| POST | `/job-costing-entries` | Create a job costing entry |
-| GET | `/job-costing-entries/{id}` | Get job costing entry by ID |
+| GET | `/job-costing/entries` | Get list of job costing entries |
+| POST | `/job-costing/entries` | Create a job costing entry |
+| GET | `/job-costing/entries/{id}` | Get job costing entry by ID |
 
 ---
 
@@ -38,15 +38,15 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/job-costing-jobs` | Get list of job costing jobs |
-| POST | `/job-costing-jobs` | Create a job costing job |
-| GET | `/job-costing-jobs/{id}` | Get job costing job by ID |
-| PUT | `/job-costing-jobs/{id}` | Update job costing job by ID |
-| DELETE | `/job-costing-jobs/{id}` | Delete job costing job by ID |
+| GET | `/job-costing/jobs` | Get list of job costing jobs |
+| POST | `/job-costing/jobs` | Create a job costing job |
+| GET | `/job-costing/jobs/{id}` | Get job costing job by ID |
+| PUT | `/job-costing/jobs/{id}` | Update job costing job by ID |
+| DELETE | `/job-costing/jobs/{id}` | Delete job costing job by ID |
 
 ---
 
-## POST /job-costing-jobs - Create Job
+## POST /job-costing/jobs - Create Job
 
 ### Request Body
 
@@ -85,7 +85,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 ---
 
-## POST /job-costing-entries - Create Entry
+## POST /job-costing/entries - Create Entry
 
 ### Request Body
 
@@ -121,16 +121,16 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/job-costing-jobs-udf` | Get list of job UDFs |
-| GET | `/job-costing-jobs-udf-fields` | Get list of UDF fields |
-| GET | `/job-costing-jobs-udf-fields/{field-name}` | Get UDF field by name |
-| PUT | `/job-costing-jobs-udf-fields/{field-name}` | Update UDF field by name |
-| DELETE | `/job-costing-jobs-udf-fields/{field-name}` | Delete UDF field by name |
-| GET | `/job-costing-jobs-udf-pages` | Get list of UDF pages |
-| POST | `/job-costing-jobs-udf-pages` | Create UDF page |
-| GET | `/job-costing-jobs-udf-pages/{id}` | Get UDF page by ID |
-| PUT | `/job-costing-jobs-udf-pages/{id}` | Update UDF page by ID |
-| DELETE | `/job-costing-jobs-udf-pages/{id}` | Delete UDF page by ID |
+| GET | `/job-costing/jobs-udf` | Get list of job UDFs |
+| GET | `/job-costing/jobs-udf-fields` | Get list of UDF fields |
+| GET | `/job-costing/jobs-udf-fields/{field-name}` | Get UDF field by name |
+| PUT | `/job-costing/jobs-udf-fields/{field-name}` | Update UDF field by name |
+| DELETE | `/job-costing/jobs-udf-fields/{field-name}` | Delete UDF field by name |
+| GET | `/job-costing/jobs-udf-pages` | Get list of UDF pages |
+| POST | `/job-costing/jobs-udf-pages` | Create UDF page |
+| GET | `/job-costing/jobs-udf-pages/{id}` | Get UDF page by ID |
+| PUT | `/job-costing/jobs-udf-pages/{id}` | Update UDF page by ID |
+| DELETE | `/job-costing/jobs-udf-pages/{id}` | Delete UDF page by ID |
 
 ---
 
@@ -141,10 +141,10 @@ Base Path: `/api/v2/companies/{company-name}`
 GET /job-costing
 
 # Get all jobs
-GET /job-costing-jobs
+GET /job-costing/jobs
 
 # Create a job
-POST /job-costing-jobs
+POST /job-costing/jobs
 Content-Type: application/json
 {
   "name": "Project Alpha",
@@ -153,10 +153,10 @@ Content-Type: application/json
 }
 
 # Get job costing entries
-GET /job-costing-entries
+GET /job-costing/entries
 
 # Create an entry
-POST /job-costing-entries
+POST /job-costing/entries
 Content-Type: application/json
 {
   "job": {"id": 1},
@@ -166,5 +166,5 @@ Content-Type: application/json
 }
 
 # Filter jobs by status
-GET /job-costing-jobs?filter={"status":"A"}
+GET /job-costing/jobs?filter={"status":"A"}
 ```

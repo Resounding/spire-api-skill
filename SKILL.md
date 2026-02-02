@@ -23,17 +23,51 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
-var handler = new HttpClientHandler();
-// Spire often uses self-signed certs in on-premise deployments
-handler.ServerCertificateCustomValidationCallback =
-    HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+// Spire often uses self-signed certs in on-premise deployments.
+// IMPORTANT: Disable auto-redirect because Spire may redirect requests,
+// and .NET's HttpClient strips the Authorization header on redirect.
+var handler = new HttpClientHandler
+{
+    ServerCertificateCustomValidationCallback =
+        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+    AllowAutoRedirect = false
+};
 
-var client = new HttpClient(handler);
-client.BaseAddress = new Uri("https://your-server:10880/api/v2/companies/yourcompany/");
-client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+var auth = new AuthenticationHeaderValue(
     "Basic",
     Convert.ToBase64String(Encoding.UTF8.GetBytes("username:password"))
 );
+
+var client = new HttpClient(handler);
+client.BaseAddress = new Uri("https://your-server:10880/api/v2/companies/yourcompany/");
+client.DefaultRequestHeaders.Authorization = auth;
+```
+
+**Redirect handling:** Since `AllowAutoRedirect = false`, you must follow redirects manually and re-attach the `Authorization` header. Use this helper:
+
+```csharp
+async Task<HttpResponseMessage> SendWithAuthAsync(HttpClient client, string url,
+    AuthenticationHeaderValue auth)
+{
+    var response = await client.GetAsync(url);
+    int remaining = 5;
+    while (remaining-- > 0 && IsRedirect(response.StatusCode)
+        && response.Headers.Location is not null)
+    {
+        var redirectUri = response.Headers.Location;
+        response.Dispose();
+        var request = new HttpRequestMessage(HttpMethod.Get, redirectUri);
+        request.Headers.Authorization = auth;
+        response = await client.SendAsync(request);
+    }
+    return response;
+}
+
+bool IsRedirect(System.Net.HttpStatusCode code) =>
+    code is System.Net.HttpStatusCode.MovedPermanently
+        or System.Net.HttpStatusCode.Found
+        or System.Net.HttpStatusCode.TemporaryRedirect
+        or System.Net.HttpStatusCode.PermanentRedirect;
 ```
 
 For production applications, extract connection settings into configuration:
@@ -59,6 +93,30 @@ var jsonOptions = new JsonSerializerOptions
     PropertyNameCaseInsensitive = true,
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
 };
+```
+
+**Important:** The Spire API returns many numeric fields (quantities, prices, totals) as **JSON strings** rather than numbers (e.g. `"29.9900"` instead of `29.99`). When deserializing into C# `decimal` properties, use a custom converter:
+
+```csharp
+public class StringDecimalConverter : JsonConverter<decimal>
+{
+    public override decimal Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options) =>
+        reader.TokenType == JsonTokenType.String
+            ? decimal.Parse(reader.GetString()!)
+            : reader.GetDecimal();
+
+    public override void Write(Utf8JsonWriter writer, decimal value,
+        JsonSerializerOptions options) =>
+        writer.WriteNumberValue(value);
+}
+```
+
+Apply it to decimal properties on your models:
+
+```csharp
+[JsonConverter(typeof(StringDecimalConverter))]
+public decimal SubTotal { get; set; }
 ```
 
 ## API Response Shape
@@ -231,9 +289,12 @@ builder.Services.AddHttpClient("SpireApi", (sp, client) =>
 .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
 {
     ServerCertificateCustomValidationCallback =
-        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+    AllowAutoRedirect = false // Spire may redirect; redirects strip the Authorization header
 });
 ```
+
+**Note:** With `AllowAutoRedirect = false`, your service layer must follow redirects manually and re-attach the `Authorization` header on each hop. See the redirect handling helper in the HttpClient Setup Pattern section above.
 
 ## API Reference Documentation
 

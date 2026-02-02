@@ -16,15 +16,15 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/purchasing-orders` | Get list of purchase orders |
-| POST | `/purchasing-orders` | Create a purchase order |
-| GET | `/purchasing-orders/{id}` | Get purchase order by ID |
-| PUT | `/purchasing-orders/{id}` | Update purchase order by ID |
-| DELETE | `/purchasing-orders/{id}` | Delete purchase order by ID |
+| GET | `/purchasing/orders` | Get list of purchase orders |
+| POST | `/purchasing/orders` | Create a purchase order |
+| GET | `/purchasing/orders/{id}` | Get purchase order by ID |
+| PUT | `/purchasing/orders/{id}` | Update purchase order by ID |
+| DELETE | `/purchasing/orders/{id}` | Delete purchase order by ID |
 
 ---
 
-## POST /purchasing-orders - Create Purchase Order
+## POST /purchasing/orders - Create Purchase Order
 
 ### Request Body
 
@@ -83,8 +83,8 @@ Base Path: `/api/v2/companies/{company-name}`
 | `location` | object | No | Location reference |
 | `location.id` | integer | No | Location ID |
 | `items` | array | Yes | Array of line items |
-| `subtotal` | decimal | No | Order subtotal (calculated) |
-| `total` | decimal | No | Order total (calculated) |
+| `subTotal` | string | No | Order subtotal (calculated). Returned as a JSON string. |
+| `total` | string | No | Order total (calculated). Returned as a JSON string. |
 
 ### Purchase Order Item Fields
 
@@ -111,7 +111,7 @@ Base Path: `/api/v2/companies/{company-name}`
 
 ---
 
-## PUT /purchasing-orders/{id} - Update Purchase Order
+## PUT /purchasing/orders/{id} - Update Purchase Order
 
 Use the same structure as POST. Include only fields you want to update.
 
@@ -133,10 +133,10 @@ Use the same structure as POST. Include only fields you want to update.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/purchasing-orders/{id}/issue` | Issue a purchase order |
-| POST | `/purchasing-orders/{id}/receive` | Receive a purchase order |
+| POST | `/purchasing/orders/{id}/issue` | Issue a purchase order |
+| POST | `/purchasing/orders/{id}/receive` | Receive a purchase order |
 
-### POST /purchasing-orders/{id}/issue - Issue PO
+### POST /purchasing/orders/{id}/issue - Issue PO
 
 Issues the purchase order to the vendor. Changes status from Open to Issued.
 
@@ -145,7 +145,7 @@ Send empty JSON body:
 {}
 ```
 
-### POST /purchasing-orders/{id}/receive - Receive PO
+### POST /purchasing/orders/{id}/receive - Receive PO
 
 Receive items on a purchase order. Updates inventory quantities.
 
@@ -170,7 +170,7 @@ Receive items on a purchase order. Updates inventory quantities.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/purchasing-orders/{id}/communications` | Get list of order communications |
+| GET | `/purchasing/orders/{id}/communications` | Get list of order communications |
 
 ---
 
@@ -178,7 +178,7 @@ Receive items on a purchase order. Updates inventory quantities.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/purchasing-orders/{id}/contacts` | Get list of order contacts |
+| GET | `/purchasing/orders/{id}/contacts` | Get list of order contacts |
 
 ---
 
@@ -186,8 +186,8 @@ Receive items on a purchase order. Updates inventory quantities.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/purchasing-orders/{id}/email-messages` | Get list of order email messages |
-| POST | `/purchasing-orders/{id}/email-messages` | Create order email message |
+| GET | `/purchasing/orders/{id}/email-messages` | Get list of order email messages |
+| POST | `/purchasing/orders/{id}/email-messages` | Create order email message |
 
 ### POST Email Message
 
@@ -205,8 +205,8 @@ Receive items on a purchase order. Updates inventory quantities.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/purchasing-orders/{id}/notes` | Get list of order notes |
-| POST | `/purchasing-orders/{id}/notes` | Create order note |
+| GET | `/purchasing/orders/{id}/notes` | Get list of order notes |
+| POST | `/purchasing/orders/{id}/notes` | Create order note |
 
 ### POST Note
 
@@ -223,16 +223,16 @@ Receive items on a purchase order. Updates inventory quantities.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/purchasing-orders/udf` | Get list of order UDFs |
-| GET | `/purchasing-orders/udf-fields` | Get list of UDF fields |
-| GET | `/purchasing-orders/udf-fields/{field-name}` | Get UDF field by name |
-| PUT | `/purchasing-orders/udf-fields/{field-name}` | Update UDF field by name |
-| DELETE | `/purchasing-orders/udf-fields/{field-name}` | Delete UDF field by name |
-| GET | `/purchasing-orders/udf-pages` | Get list of UDF pages |
-| POST | `/purchasing-orders/udf-pages` | Create UDF page |
-| GET | `/purchasing-orders/udf-pages/{id}` | Get UDF page by ID |
-| PUT | `/purchasing-orders/udf-pages/{id}` | Update UDF page by ID |
-| DELETE | `/purchasing-orders/udf-pages/{id}` | Delete UDF page by ID |
+| GET | `/purchasing/orders/udf` | Get list of order UDFs |
+| GET | `/purchasing/orders/udf-fields` | Get list of UDF fields |
+| GET | `/purchasing/orders/udf-fields/{field-name}` | Get UDF field by name |
+| PUT | `/purchasing/orders/udf-fields/{field-name}` | Update UDF field by name |
+| DELETE | `/purchasing/orders/udf-fields/{field-name}` | Delete UDF field by name |
+| GET | `/purchasing/orders/udf-pages` | Get list of UDF pages |
+| POST | `/purchasing/orders/udf-pages` | Create UDF page |
+| GET | `/purchasing/orders/udf-pages/{id}` | Get UDF page by ID |
+| PUT | `/purchasing/orders/udf-pages/{id}` | Update UDF page by ID |
+| DELETE | `/purchasing/orders/udf-pages/{id}` | Delete UDF page by ID |
 
 ### Including UDFs in Purchase Order
 
@@ -253,8 +253,8 @@ Receive items on a purchase order. Updates inventory quantities.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/purchasing-history` | Get list of purchasing history |
-| GET | `/purchasing-history/{id}` | Get purchasing history record by ID |
+| GET | `/purchasing/history` | Get list of purchasing history |
+| GET | `/purchasing/history/{id}` | Get purchasing history record by ID |
 
 ---
 
@@ -262,7 +262,7 @@ Receive items on a purchase order. Updates inventory quantities.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/purchasing-history/{id}/communications` | Get list of history communications |
+| GET | `/purchasing/history/{id}/communications` | Get list of history communications |
 
 ---
 
@@ -270,7 +270,7 @@ Receive items on a purchase order. Updates inventory quantities.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/purchasing-history/{id}/contacts` | Get list of history contacts |
+| GET | `/purchasing/history/{id}/contacts` | Get list of history contacts |
 
 ---
 
@@ -278,8 +278,8 @@ Receive items on a purchase order. Updates inventory quantities.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/purchasing-history/{id}/email-messages` | Get list of history email messages |
-| POST | `/purchasing-history/{id}/email-messages` | Create history email message |
+| GET | `/purchasing/history/{id}/email-messages` | Get list of history email messages |
+| POST | `/purchasing/history/{id}/email-messages` | Create history email message |
 
 ---
 
@@ -287,8 +287,8 @@ Receive items on a purchase order. Updates inventory quantities.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/purchasing-history/{id}/notes` | Get list of history notes |
-| POST | `/purchasing-history/{id}/notes` | Create history note |
+| GET | `/purchasing/history/{id}/notes` | Get list of history notes |
+| POST | `/purchasing/history/{id}/notes` | Create history note |
 
 ---
 
@@ -296,7 +296,7 @@ Receive items on a purchase order. Updates inventory quantities.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/purchasing-history-items` | Get list of all purchasing history items |
+| GET | `/purchasing/history-items` | Get list of all purchasing history items |
 
 ---
 
@@ -304,22 +304,22 @@ Receive items on a purchase order. Updates inventory quantities.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/purchasing-items` | Get list of purchasing items |
+| GET | `/purchasing/items` | Get list of purchasing items |
 
 ### Purchasing Items UDFs
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/purchasing-items/udf` | Get list of item UDFs |
-| GET | `/purchasing-items/udf-fields` | Get list of UDF fields |
-| GET | `/purchasing-items/udf-fields/{field-name}` | Get UDF field by name |
-| PUT | `/purchasing-items/udf-fields/{field-name}` | Update UDF field by name |
-| DELETE | `/purchasing-items/udf-fields/{field-name}` | Delete UDF field by name |
-| GET | `/purchasing-items/udf-pages` | Get list of UDF pages |
-| POST | `/purchasing-items/udf-pages` | Create UDF page |
-| GET | `/purchasing-items/udf-pages/{id}` | Get UDF page by ID |
-| PUT | `/purchasing-items/udf-pages/{id}` | Update UDF page by ID |
-| DELETE | `/purchasing-items/udf-pages/{id}` | Delete UDF page by ID |
+| GET | `/purchasing/items/udf` | Get list of item UDFs |
+| GET | `/purchasing/items/udf-fields` | Get list of UDF fields |
+| GET | `/purchasing/items/udf-fields/{field-name}` | Get UDF field by name |
+| PUT | `/purchasing/items/udf-fields/{field-name}` | Update UDF field by name |
+| DELETE | `/purchasing/items/udf-fields/{field-name}` | Delete UDF field by name |
+| GET | `/purchasing/items/udf-pages` | Get list of UDF pages |
+| POST | `/purchasing/items/udf-pages` | Create UDF page |
+| GET | `/purchasing/items/udf-pages/{id}` | Get UDF page by ID |
+| PUT | `/purchasing/items/udf-pages/{id}` | Update UDF page by ID |
+| DELETE | `/purchasing/items/udf-pages/{id}` | Delete UDF page by ID |
 
 ---
 
@@ -327,16 +327,16 @@ Receive items on a purchase order. Updates inventory quantities.
 
 ```bash
 # Get all purchase orders
-GET /purchasing-orders
+GET /purchasing/orders
 
 # Get purchase order by ID
-GET /purchasing-orders/12345
+GET /purchasing/orders/12345
 
 # Get with specific fields
-GET /purchasing-orders/12345?fields=id,poNo,vendor.name,total
+GET /purchasing/orders/12345?fields=id,poNo,vendor.name,total
 
 # Create a new purchase order
-POST /purchasing-orders
+POST /purchasing/orders
 Content-Type: application/json
 {
   "vendor": {"vendorNo": "ACMSYS"},
@@ -347,35 +347,35 @@ Content-Type: application/json
 }
 
 # Issue a purchase order
-POST /purchasing-orders/12345/issue
+POST /purchasing/orders/12345/issue
 Content-Type: application/json
 {}
 
 # Receive a purchase order
-POST /purchasing-orders/12345/receive
+POST /purchasing/orders/12345/receive
 Content-Type: application/json
 {
   "items": [{"id": 1001, "receiveQty": "100"}]
 }
 
 # Filter orders by status (Open)
-GET /purchasing-orders?filter={"status":"O"}
+GET /purchasing/orders?filter={"status":"O"}
 
 # Filter by vendor
-GET /purchasing-orders?filter={"vendor.vendorNo":"ACMSYS"}
+GET /purchasing/orders?filter={"vendor.vendorNo":"ACMSYS"}
 
 # Filter by date range
-GET /purchasing-orders?filter={"date":{"$gte":"2024-01-01","$lte":"2024-01-31"}}
+GET /purchasing/orders?filter={"date":{"$gte":"2024-01-01","$lte":"2024-01-31"}}
 
 # Get orders sorted by date descending
-GET /purchasing-orders?sort=-date
+GET /purchasing/orders?sort=-date
 
 # Include UDF fields
-GET /purchasing-orders?udf=1
+GET /purchasing/orders?udf=1
 
 # Get purchasing history
-GET /purchasing-history
+GET /purchasing/history
 
 # Get purchase order items
-GET /purchasing-items
+GET /purchasing/items
 ```

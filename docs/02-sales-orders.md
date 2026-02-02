@@ -16,15 +16,15 @@ Base Path: `/api/v2/companies/{company-name}`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/sales-orders` | Get list of sales orders |
-| POST | `/sales-orders` | Create a sales order |
-| GET | `/sales-orders/{id}` | Get sales order by ID |
-| PUT | `/sales-orders/{id}` | Update sales order by ID |
-| DELETE | `/sales-orders/{id}` | Delete sales order by ID |
+| GET | `/sales/orders` | Get list of sales orders |
+| POST | `/sales/orders` | Create a sales order |
+| GET | `/sales/orders/{id}` | Get sales order by ID |
+| PUT | `/sales/orders/{id}` | Update sales order by ID |
+| DELETE | `/sales/orders/{id}` | Delete sales order by ID |
 
 ---
 
-## POST /sales-orders - Create Sales Order
+## POST /sales/orders - Create Sales Order
 
 ### Request Body
 
@@ -110,9 +110,9 @@ The API handles defaults automatically - you only need to provide minimal requir
 | `territory.code` | string | No | Territory code |
 | `items` | array | Yes | Array of line items |
 | `payments` | array | No | Array of payments/deposits |
-| `freight` | decimal | No | Freight amount |
-| `subtotal` | decimal | No | Order subtotal (calculated) |
-| `total` | decimal | No | Order total (calculated) |
+| `freight` | string | No | Freight amount. Returned as a JSON string. |
+| `subTotal` | string | No | Order subtotal (calculated). Returned as a JSON string, e.g. `"149.95"` |
+| `total` | string | No | Order total (calculated). Returned as a JSON string. |
 
 ### Sales Order Item Fields
 
@@ -149,7 +149,7 @@ The API handles defaults automatically - you only need to provide minimal requir
 
 ---
 
-## PUT /sales-orders/{id} - Update Sales Order
+## PUT /sales/orders/{id} - Update Sales Order
 
 Use the same structure as POST. Include only fields you want to update.
 
@@ -171,7 +171,7 @@ Use the same structure as POST. Include only fields you want to update.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/sales-orders/{id}/communications` | Get list of sales order communications |
+| GET | `/sales/orders/{id}/communications` | Get list of sales order communications |
 
 ---
 
@@ -179,8 +179,8 @@ Use the same structure as POST. Include only fields you want to update.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/sales-orders/{id}/email-messages` | Get list of sales order email messages |
-| POST | `/sales-orders/{id}/email-messages` | Create a sales order email message |
+| GET | `/sales/orders/{id}/email-messages` | Get list of sales order email messages |
+| POST | `/sales/orders/{id}/email-messages` | Create a sales order email message |
 
 ### POST Email Message
 
@@ -198,8 +198,8 @@ Use the same structure as POST. Include only fields you want to update.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/sales-orders/{id}/notes` | Get list of sales order notes |
-| POST | `/sales-orders/{id}/notes` | Create a sales order note |
+| GET | `/sales/orders/{id}/notes` | Get list of sales order notes |
+| POST | `/sales/orders/{id}/notes` | Create a sales order note |
 
 ### POST Note
 
@@ -216,7 +216,7 @@ Use the same structure as POST. Include only fields you want to update.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/sales-orders/{id}/invoice` | Convert sales order to invoice |
+| POST | `/sales/orders/{id}/invoice` | Convert sales order to invoice |
 
 Convert an open sales order to an invoice. Send empty JSON body or specify options:
 
@@ -232,16 +232,16 @@ Convert an open sales order to an invoice. Send empty JSON body or specify optio
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/sales-orders/udf` | Get list of sales order UDFs |
-| GET | `/sales-orders/udf-fields` | Get list of sales order UDF fields |
-| GET | `/sales-orders/udf-fields/{field-name}` | Get sales order UDF field by name |
-| PUT | `/sales-orders/udf-fields/{field-name}` | Update sales order UDF field by name |
-| DELETE | `/sales-orders/udf-fields/{field-name}` | Delete sales order UDF field by name |
-| GET | `/sales-orders/udf-pages` | Get list of sales order UDF pages |
-| POST | `/sales-orders/udf-pages` | Create a sales order UDF page |
-| GET | `/sales-orders/udf-pages/{id}` | Get sales order UDF page by ID |
-| PUT | `/sales-orders/udf-pages/{id}` | Update sales order UDF page by ID |
-| DELETE | `/sales-orders/udf-pages/{id}` | Delete sales order UDF page by ID |
+| GET | `/sales/orders/udf` | Get list of sales order UDFs |
+| GET | `/sales/orders/udf-fields` | Get list of sales order UDF fields |
+| GET | `/sales/orders/udf-fields/{field-name}` | Get sales order UDF field by name |
+| PUT | `/sales/orders/udf-fields/{field-name}` | Update sales order UDF field by name |
+| DELETE | `/sales/orders/udf-fields/{field-name}` | Delete sales order UDF field by name |
+| GET | `/sales/orders/udf-pages` | Get list of sales order UDF pages |
+| POST | `/sales/orders/udf-pages` | Create a sales order UDF page |
+| GET | `/sales/orders/udf-pages/{id}` | Get sales order UDF page by ID |
+| PUT | `/sales/orders/udf-pages/{id}` | Update sales order UDF page by ID |
+| DELETE | `/sales/orders/udf-pages/{id}` | Delete sales order UDF page by ID |
 
 ### Including UDFs in Sales Order
 
@@ -262,32 +262,32 @@ Convert an open sales order to an invoice. Send empty JSON body or specify optio
 
 ```bash
 # Get all sales orders
-GET /sales-orders
+GET /sales/orders
 
 # Get sales order by ID
-GET /sales-orders/12345
+GET /sales/orders/12345
 
 # Get with specific fields
-GET /sales-orders/12345?fields=id,orderNo,customer.name,total
+GET /sales/orders/12345?fields=id,orderNo,customer.name,total
 
 # Filter orders by status (Open)
-GET /sales-orders?filter={"status":"O"}
+GET /sales/orders?filter={"status":"O"}
 
 # Filter by customer
-GET /sales-orders?filter={"customer.customerNo":"ACTTEC"}
+GET /sales/orders?filter={"customer.customerNo":"ACTTEC"}
 
 # Filter by date range
-GET /sales-orders?filter={"orderDate":{"$gte":"2024-01-01","$lte":"2024-01-31"}}
+GET /sales/orders?filter={"orderDate":{"$gte":"2024-01-01","$lte":"2024-01-31"}}
 
 # Get orders sorted by date descending
-GET /sales-orders?sort=-orderDate
+GET /sales/orders?sort=-orderDate
 
 # Include UDF fields
-GET /sales-orders?udf=1
+GET /sales/orders?udf=1
 
 # Paginate results
-GET /sales-orders?start=0&limit=50
+GET /sales/orders?start=0&limit=50
 
 # Convert order to invoice
-POST /sales-orders/12345/invoice
+POST /sales/orders/12345/invoice
 ```
