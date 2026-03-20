@@ -1,6 +1,6 @@
 ---
 name: spire-api
-description: "C#/.NET development against the Spire ERP REST API. Use when building Spire integrations, querying inventory, customers, sales, purchasing, or accounting."
+description: "C#/.NET development against the Spire ERP REST API and underlying PostgreSQL database. Use when building Spire integrations, querying inventory, customers, sales, purchasing, or accounting."
 ---
 
 # Spire API - C#/.NET Development Skill
@@ -318,3 +318,43 @@ Consult these files for endpoint details, request/response schemas, and field de
 - [docs/15-core-resources.md](docs/15-core-resources.md) - Companies, users, currencies, payment methods/terms, shipping
 
 For C# code examples covering common workflows, see [examples.md](examples.md).
+
+## Database Direct Access
+
+When the REST API does not support a required operation (e.g. complex reporting queries, bulk reads, cross-table joins), you can query the underlying PostgreSQL database directly. The database schema is `public` (v3).
+
+**Connection:** Use `Npgsql` for .NET PostgreSQL access:
+
+```csharp
+using Npgsql;
+
+var connStr = "Host=your-server;Port=5432;Database=yourcompany;Username=user;Password=pass";
+await using var conn = new NpgsqlConnection(connStr);
+await conn.OpenAsync();
+```
+
+**Key conventions:**
+- All tables have an `id` (integer, PK) and audit columns: `_created`, `_created_by`, `_modified`, `_modified_by`, `_dbversion`
+- Timestamps are UTC (`timestamp without time zone`)
+- User Defined Fields are stored in `udf_data` columns (PostgreSQL `hstore` type)
+- Periodic financial data (sales by period, GP by period) uses PostgreSQL arrays: `numeric(15,2)[]` with 13 elements (periods 1-13)
+- Foreign key relationships are documented in column comments (e.g. "links to payment_terms.terms_code")
+
+### Database Data Dictionary
+
+Consult these files for complete column definitions, data types, and constraints:
+
+- [docs/db-addresses.md](docs/db-addresses.md) - addresses, address_contacts, address_contact_types
+- [docs/db-customers.md](docs/db-customers.md) - customers, customer_code_changes, customer_part_nos
+- [docs/db-sales-orders.md](docs/db-sales-orders.md) - sales_orders, sales_order_items, sales_order_payments, sales_order_equipment, batches, departments, salespeople, territories, tills
+- [docs/db-sales-history.md](docs/db-sales-history.md) - sales_history, sales_history_items, sales_history_payments, sales_history_equipment, sales_taxes
+- [docs/db-inventory.md](docs/db-inventory.md) - inventory, adjustments, comments, components, counts, images, labels, levies, lot trace, price levels, price matrix, product codes, promo codes, receipts, requisitions, sell prices, serial numbers, statistics, transfers, UOMs, UPC codes, warehouses
+- [docs/db-purchasing.md](docs/db-purchasing.md) - purchase_orders, purchase_order_items, purchase_history, purchase_receipts, vendors, vendor_pricing
+- [docs/db-accounts-payable.md](docs/db-accounts-payable.md) - ap_batches, ap_batch_items, ap_transactions, ap_transaction_links
+- [docs/db-accounts-receivable.md](docs/db-accounts-receivable.md) - ar_batches, ar_batch_items, ar_transactions, ar_transaction_links
+- [docs/db-general-ledger.md](docs/db-general-ledger.md) - gl_accounts, gl_allocations, gl_divisions, gl_groups, gl_periods, gl_segments, gl_subgroups, gl_transactions, gl_reconciliations, gl_recurring, gl_special_accounts, plus all gl_history_* tables
+- [docs/db-production.md](docs/db-production.md) - production_orders, production_order_items, production_templates, production_history, bom_categories, bom_item_replacements
+- [docs/db-payroll.md](docs/db-payroll.md) - employees, employee_roes, employee_t4s, payroll_depts, payroll_schedules, payroll_timecards, payroll_timecard_entries
+- [docs/db-jobs.md](docs/db-jobs.md) - jobs, job_items, phases, phase_history
+- [docs/db-notes.md](docs/db-notes.md) - notes, note_attachments, note_types
+- [docs/db-system.md](docs/db-system.md) - system_settings, system_users_base, system_filters, record_types, udf_fields, udf_pages, countries, currencies, email_templates, equipment, payment_methods, payment_terms, shipping_methods, cash_outs, integrations
