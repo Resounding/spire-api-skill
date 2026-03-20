@@ -26,6 +26,51 @@ Table to control system settings and values
 - `system_settings_pkey` (Primary key): (id)
 - `system_settings_user_id_fkey` (Foreign key): (user_id) REFERENCES public.system_users_base (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE CASCADE
 
+#### User Permissions in system_settings
+
+Per-user module permissions are stored as rows in `system_settings` with `user_id` linking to `system_users_base.id`. The `key` column follows the pattern `spire.{module}.{action}` and `txt_data` is `'Y'` (allowed) or `'N'` (denied). If no row exists for a user, they inherit the system default.
+
+**Known permission keys:**
+
+| Key | Description |
+|-----|-------------|
+| `spire.requisitions.allow_view` | View requisitions |
+| `spire.requisitions.allow_add` | Create requisitions |
+| `spire.requisitions.allow_edit` | Edit requisitions |
+| `spire.requisitions.allow_delete` | Delete requisitions |
+| `spire.requisitions.allow_process` | Process (approve/convert) requisitions |
+| `spire.email.allow_access` | Access email module |
+| `spire.gl.allow_access` | Access General Ledger |
+| `spire.gl.budgets.allow_access` | Access GL budgets |
+| `spire.ap.allow_access` | Access Accounts Payable |
+| `spire.ar.allow_access` | Access Accounts Receivable |
+| `spire.job.allow_access` | Access Job Costing |
+| `spire.employee.allow_access` | Access Employee/Payroll |
+| `spire.inventory.access_adjustments` | Access inventory adjustments |
+| `spire.inventory.access_transfers` | Access inventory transfers |
+| `spire.inventory.count.allow_access` | Access inventory counts |
+
+**Example — check if a user can process requisitions:**
+
+```sql
+SELECT ss.txt_data AS allowed
+FROM system_settings ss
+JOIN system_users_base u ON u.id = ss.user_id
+WHERE u.username = 'JSMITH'
+  AND ss.key = 'spire.requisitions.allow_process';
+```
+
+**Example — list all permissions for a user:**
+
+```sql
+SELECT ss.key, ss.txt_data
+FROM system_settings ss
+JOIN system_users_base u ON u.id = ss.user_id
+WHERE u.username = 'JSMITH'
+  AND ss.key LIKE 'spire.%.allow_%'
+ORDER BY ss.key;
+```
+
 ### system_users_base
 
 Table for User list
