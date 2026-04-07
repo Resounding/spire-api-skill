@@ -239,6 +239,23 @@ new { customer = new { id = 123 } }
 new { customer = new { customerNo = "CUST001" } }
 ```
 
+### Persisting links to sales/purchase line items: prefer GUID over ID
+
+If you are storing a foreign reference to a sales order item or purchase order item in your own table, **store the line's `guid`, not its integer `id`**.
+
+When a sales order is invoiced (or a purchase order is received and closed), Spire moves the records from the working tables to the history tables:
+
+| Working table | History table |
+|---|---|
+| `sales_order_items` | `sales_history_items` |
+| `purchase_order_items` | `purchase_history_items` |
+
+The integer `id` of the line **changes** during this move, but the `guid` column (`character varying(32)`) is **stable** across the move and is the same value Spire itself uses to link related rows (`inventory_serial_transactions.link_guid`, `inventory_receipts.link_guid`, `purchase_receipts.guid`, etc.).
+
+A reference stored as `id` will silently break the moment the order is invoiced/received. A reference stored as `guid` keeps working — you just need to look in the history table instead of the working table.
+
+**Important caveat:** the `guid` column is **not exposed by the Spire REST API** on sales/purchase line items. You can only read it via direct database access. Typical pattern: fetch the order from the REST API as usual, then issue a small DB query (`SELECT id, guid FROM sales_order_items WHERE id = ANY(@ids)`) to enrich the items with their guids before returning them to your callers.
+
 ### Status Codes
 
 | Entity | Active | Inactive | Other |
