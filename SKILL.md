@@ -43,6 +43,20 @@ client.BaseAddress = new Uri("https://your-server:10880/api/v2/companies/yourcom
 client.DefaultRequestHeaders.Authorization = auth;
 ```
 
+**Trailing slash on collection URLs (CRITICAL):** All collection endpoints (e.g. `customers`, `inventory/items`, `sales/orders`) **must** have a trailing slash before the query string, or Spire will respond with a 301/302 redirect to the slash-suffixed URL. Combined with the auto-redirect behavior, this will cause the `Authorization` header to be stripped and the retried request will return 401 Unauthorized.
+
+```csharp
+// WRONG — Spire will redirect, auth header gets stripped
+var response = await client.GetAsync("customers?limit=10");
+
+// CORRECT — trailing slash before the query string
+var response = await client.GetAsync("customers/?limit=10");
+var response = await client.GetAsync("inventory/items/?filter=...");
+var response = await client.GetAsync("sales/orders/?start=0&limit=100");
+```
+
+This applies to all collection GETs. Single-resource URLs (e.g. `customers/123`) do not need a trailing slash.
+
 **Redirect handling:** Since `AllowAutoRedirect = false`, you must follow redirects manually and re-attach the `Authorization` header. Use this helper:
 
 ```csharp
@@ -270,24 +284,79 @@ A reference stored as `id` will silently break the moment the order is invoiced/
 
 ### POST/PUT Conventions
 
-- **POST** creates a new record. Include all required fields.
+- **POST** creates a new record. Returns **201 Created** with a `Location` header pointing to the new resource. The response body is empty — you must GET the `Location` URL to retrieve the created record.
 - **PUT** updates an existing record. Include only the fields to change.
 - For items/entries arrays on PUT, include the `id` of existing line items to update them.
+- **Do not send server-assigned fields** (e.g. `id`, `orderNo`, `status`) on POST. If your C# model includes these fields, exclude them from serialization using `[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]` or use `WhenWritingNull` with nullable types. Sending `"id": null` or `"id": 0` can cause validation errors.
+
+### POST Response Pattern (201 + Location Header)
+
+```csharp
+// POST returns 201 with empty body — follow the Location header
+var response = await client.PostAsync("sales/orders/", content, ct);
+// ... check for errors ...
+
+var location = response.Headers.Location;
+var getResponse = await client.GetAsync(location, ct);
+var created = await getResponse.Content.ReadFromJsonAsync<SpireSalesOrder>(jsonOptions, ct);
+```
+
+**Exception:** Some action endpoints (e.g. `POST /sales/orders/{id}/invoice`) return **200** with the result directly in the response body.
+
+### Address Fields
+
+The `provState` field is `varchar(3)` — use short province/state codes (e.g. `"BC"`, `"KY"`), not full names. The `country` field expects short codes (e.g. `"US"`, `"CA"`), not full names like `"United States"` or `"Canada"`.
 
 ## Error Handling
+
+Spire returns errors as JSON with this structure:
+
+```json
+{
+  "type": "error",
+  "message": "Customer is missing or invalid",
+  "error_type": "RequiredFieldError"
+}
+```
+
+- `type` is always `"error"`
+- `message` describes what went wrong
+- `error_type` varies (e.g. `RequiredFieldError`, `DataError`, `ValidationError`)
 
 ```csharp
 var response = await client.GetAsync(url);
 if (!response.IsSuccessStatusCode)
 {
     var body = await response.Content.ReadAsStringAsync();
-    // Spire returns JSON error details in the response body
-    throw new HttpRequestException(
-        $"Spire API error {(int)response.StatusCode}: {body}");
+    // Parse Spire's error JSON for a meaningful message
+    try
+    {
+        var error = JsonSerializer.Deserialize<SpireErrorResponse>(body, jsonOptions);
+        var message = error?.Message ?? body;
+        if (!string.IsNullOrEmpty(error?.ErrorType))
+            message = $"{error.ErrorType}: {message}";
+        throw new HttpRequestException(
+            $"Spire API error {(int)response.StatusCode}: {message}");
+    }
+    catch (JsonException)
+    {
+        throw new HttpRequestException(
+            $"Spire API error {(int)response.StatusCode}: {body}");
+    }
 }
 ```
 
-Response codes: 200 (OK), 201 (Created), 400 (Bad Request), 401 (Unauthorized), 404 (Not Found), 500 (Server Error).
+| Code | Description |
+|------|-------------|
+| 200 | Success |
+| 201 | Created (follow Location header to GET the new resource) |
+| 400 | Bad Request |
+| 401 | Unauthorized |
+| 403 | Forbidden (insufficient permissions) |
+| 404 | Not Found |
+| 422 | Unprocessable Entity (validation/semantic errors) |
+| 423 | Locked (record locked by another user) |
+| 500 | Server Error |
 
 ## Dependency Injection Pattern
 

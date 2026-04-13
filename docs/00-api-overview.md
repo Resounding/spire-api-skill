@@ -174,7 +174,7 @@ PUT /inventory/items/{id}
 | Method | Description |
 |--------|-------------|
 | GET | Retrieve resource(s) |
-| POST | Create new resource |
+| POST | Create new resource — returns **201** with empty body and `Location` header. Follow the `Location` to GET the created resource. Exception: some action endpoints (e.g. invoice conversion) return **200** with the result in the body. |
 | PUT | Update existing resource |
 | DELETE | Remove resource |
 
@@ -184,12 +184,33 @@ PUT /inventory/items/{id}
 
 | Code | Description |
 |------|-------------|
-| 200 | Success |
-| 201 | Created |
+| 200 | Success (body contains result) |
+| 201 | Created (empty body — follow `Location` header to GET the new resource) |
 | 400 | Bad Request |
 | 401 | Unauthorized |
+| 403 | Forbidden (insufficient permissions) |
 | 404 | Not Found |
+| 422 | Unprocessable Entity (validation/semantic errors) |
+| 423 | Locked (record locked by another user) |
 | 500 | Server Error |
+
+---
+
+## Error Response Format
+
+Errors are returned as JSON:
+
+```json
+{
+  "type": "error",
+  "message": "Customer is missing or invalid",
+  "error_type": "RequiredFieldError"
+}
+```
+
+- `type` — always `"error"`
+- `message` — human-readable description
+- `error_type` — varies per error (e.g. `RequiredFieldError`, `DataError`, `ValidationError`)
 
 ---
 

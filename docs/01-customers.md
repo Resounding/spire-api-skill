@@ -108,9 +108,9 @@ Base Path: `/api/v2/companies/{company-name}`
 | `line2` | string | Address line 2 |
 | `line3` | string | Address line 3 |
 | `city` | string | City |
-| `provState` | string | Province/State |
+| `provState` | string(3) | Province/State **short code** (e.g. `"BC"`, `"KY"`, `"ON"`) — not the full name |
 | `postalCode` | string | Postal/ZIP code |
-| `country` | string | Country |
+| `country` | string | Country **short code** (e.g. `"US"`, `"CA"`) — not the full name. Using full names like `"United States"` will cause validation errors. |
 
 ### Contact Object Fields
 

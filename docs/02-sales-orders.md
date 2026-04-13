@@ -26,6 +26,10 @@ Base Path: `/api/v2/companies/{company-name}`
 
 ## POST /sales/orders - Create Sales Order
 
+Returns **201 Created** with an empty body and a `Location` header pointing to the new resource. You must GET the `Location` URL to retrieve the created order.
+
+Do **not** send server-assigned fields like `id`, `orderNo`, or `status` in the POST body — Spire auto-assigns them. Sending `"id": null` or `"id": 0` can cause validation errors.
+
 ### Request Body
 
 The API handles defaults automatically - you only need to provide minimal required fields.
@@ -42,17 +46,17 @@ The API handles defaults automatically - you only need to provide minimal requir
     "city": "Vancouver",
     "provState": "BC",
     "postalCode": "V6B 1A1",
-    "country": "Canada"
+    "country": "CA"
   },
   "shippingAddress": {
     "line1": "456 Shipping Ave",
     "city": "Vancouver",
     "provState": "BC",
-    "postalCode": "V6B 2B2"
+    "postalCode": "V6B 2B2",
+    "country": "CA"
   },
   "orderDate": "2024-01-15",
   "requiredDate": "2024-01-22",
-  "status": "O",
   "salesperson": {
     "code": "JD"
   },
@@ -218,7 +222,9 @@ Use the same structure as POST. Include only fields you want to update.
 |--------|----------|-------------|
 | POST | `/sales/orders/{id}/invoice` | Convert sales order to invoice |
 
-Convert an open sales order to an invoice. Send empty JSON body or specify options:
+Convert an open sales order to an invoice. Returns **200** with the invoice details in the response body (unlike most POST endpoints which return 201 with an empty body).
+
+Optionally specify options:
 
 ```json
 {
