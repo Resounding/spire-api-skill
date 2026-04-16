@@ -114,7 +114,7 @@ The API handles defaults automatically - you only need to provide minimal requir
 | `territory.code` | string | No | Territory code |
 | `items` | array | Yes | Array of line items |
 | `payments` | array | No | Array of payments/deposits |
-| `freight` | string | No | Freight amount. Returned as a JSON string. |
+| `freight` | string | No | Freight amount. Returned as a JSON string. **Gotcha:** for a manually set `freight` value to take effect (and not be overwritten by Spire's freight calculation), the underlying `user_freight` column on the sales order must be set to `TRUE` — this flags the freight as a user override. |
 | `subTotal` | string | No | Order subtotal (calculated). Returned as a JSON string, e.g. `"149.95"` |
 | `total` | string | No | Order total (calculated). Returned as a JSON string. |
 

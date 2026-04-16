@@ -47,7 +47,7 @@ Table for Sales Orders not yet posted
 | discount | numeric(5,2) | Yes |  | Discount percentage on the entire Sales Order |
 | subtotal | numeric(15,2) | Yes |  | Subtotal before taxes, discount and freight |
 | total_discount | numeric(15,2) | Yes |  | Sales Order discount amount given on total, does not include line discounts |
-| freight | numeric(15,2) | Yes |  | Total freight on the Sales Order |
+| freight | numeric(15,2) | Yes |  | Total freight on the Sales Order. **Note:** a value written here only persists if `user_freight` is also set to `TRUE`; otherwise Spire will recalculate/overwrite it. |
 | sales_tax | numeric(15,2) | Yes |  | Total Sales tax on this Sales Order |
 | gross_profit | numeric(15,2) | Yes |  | Gross profit for this Sales Order |
 | total_current_cost | numeric(15,2) | Yes |  | Total current cost of items on this Sales Order |
